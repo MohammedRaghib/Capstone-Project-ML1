@@ -25,8 +25,8 @@ It demonstrates fundamental Machine Learning concepts including data preprocessi
 ## How to Run
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/movie-rating-prediction.git
-   cd movie-rating-prediction
+   git clone https://github.com/MohammedRaghib/Capstone-Project-ML1.git
+   cd Capstone-Project-ML1
    ```
 2. Install dependencies:
    ```bash
