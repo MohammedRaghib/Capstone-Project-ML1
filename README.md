@@ -1,5 +1,8 @@
 # Movie Rating Prediction
 
+## Problem Statement
+The goal of this project is to develop a machine learning model that predicts a movie's rating based on its metadata. Many platforms and production companies use such predictions to assess the potential success of a movie before release. By analyzing features such as budget, genres, runtime, release date, and popularity, this project aims to forecast a movie's rating (e.g., vote average) and provide insights into which factors most influence audience reception.
+
 ## Overview
 This project predicts movie ratings using metadata from the TMDb 5000 Movie Dataset.  
 It demonstrates fundamental Machine Learning concepts including data preprocessing, feature engineering, model building, and evaluation.
@@ -53,7 +56,7 @@ MIT License
 ```
 MIT License
 
-Copyright (c) 2025 Your Name
+Copyright (c) 2025 Mohammed Raghib
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
