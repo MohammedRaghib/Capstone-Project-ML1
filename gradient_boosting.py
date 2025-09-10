@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.preprocessing import RobustScaler, OneHotEncoder
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import RobustScaler
+from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import numpy as np
 import ast
@@ -15,7 +15,7 @@ top_genres = pd.Series(all_genres).value_counts().head(20).index.tolist()
 
 top_directors = df['director'].value_counts().head(50).index.tolist()
 
-numerical_features = ['budget', 'popularity', 'revenue', 'runtime', 'release_year']
+numerical_features = ['budget', 'popularity', 'revenue', 'runtime', 'release_year', 'profit', 'roi']
 categorical_features = ['genres', 'director']
 
 for genre in top_genres:
@@ -36,24 +36,26 @@ X[numerical_features] = scaler.fit_transform(X[numerical_features])
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 param_grid = {
-    'n_estimators': [50, 100],
-    'max_depth': [5, 7],     # Significantly lower max_depth
-    'min_samples_split': [20, 30],  # Increased min_samples_split
-    'min_samples_leaf': [15, 20]   # Increased min_samples_leaf
+    'n_estimators': [500, 800],
+    'max_depth': [3, 4, 5],
+    'learning_rate': [0.01, 0.02],
+    'subsample': [0.7, 0.8, 1.0],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 3, 5]
 }
 
-rf = RandomForestRegressor(random_state=42, n_jobs=-1)
-grid_search = GridSearchCV(estimator=rf, param_grid=param_grid, 
+gbr = GradientBoostingRegressor(random_state=42)
+grid_search = GridSearchCV(estimator=gbr, param_grid=param_grid,
                            scoring='r2', cv=3, n_jobs=-1, verbose=1)
 grid_search.fit(X_train, y_train)
 
 print("Best Hyperparameters:", grid_search.best_params_)
 
-best_rf = grid_search.best_estimator_
-best_rf.fit(X_train, y_train)
+best_gbr = grid_search.best_estimator_
+best_gbr.fit(X_train, y_train)
 
-y_train_pred = best_rf.predict(X_train)
-y_test_pred = best_rf.predict(X_test)
+y_train_pred = best_gbr.predict(X_train)
+y_test_pred = best_gbr.predict(X_test)
 
 train_mae = mean_absolute_error(y_train, y_train_pred)
 train_rmse = np.sqrt(mean_squared_error(y_train, y_train_pred))

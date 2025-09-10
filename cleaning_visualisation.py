@@ -59,7 +59,7 @@ df['director'] = df['crew'].apply(get_director)
 
 features = [
     'budget', 'popularity', 'runtime', 'vote_count', 'revenue',
-    'release_year', 'genres', 'director', 'vote_average'
+    'release_year', 'genres', 'director', 'vote_average', 'profit', 'roi'
 ]
 df = df[features]
 
@@ -119,13 +119,13 @@ plt.tight_layout()
 plt.savefig('Budget Revenue Histograms.png')
 plt.show()
 
-numerical_features = ['budget', 'popularity', 'runtime', 'vote_count', 'revenue', 'release_year', 'vote_average']
+# numerical_features = ['budget', 'popularity', 'runtime', 'vote_count', 'revenue', 'release_year', 'vote_average']
 
-sns.pairplot(df[numerical_features])
+# sns.pairplot(df[numerical_features])
 
-plt.savefig('Movie Pair Plot.png')
-plt.show()
+# plt.savefig('Movie Pair Plot.png')
+# plt.show()
 
 print("\nCleaned dataset shape:", df.shape)
 
-# df.to_csv('./Data/Cleaned/movies_cleaned.csv', index=False)
+df.to_csv('./Data/Cleaned/movies_cleaned.csv', index=False)
