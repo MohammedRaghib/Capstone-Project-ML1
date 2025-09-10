@@ -22,22 +22,20 @@ df.drop(columns=columns_to_drop, inplace=True, errors='ignore')
 
 df.rename(columns={'title_x': 'title'}, inplace=True)
 
-# Handle missing runtime
 df['runtime'].fillna(df['runtime'].median(), inplace=True)
 df.dropna(subset=['release_date', 'vote_average'], inplace=True)
 
-# Extract release year
 df['release_year'] = pd.to_datetime(df['release_date'], errors='coerce').dt.year
 
-# Fill missing/zero budgets with median
 df['budget'] = df['budget'].replace(0, np.nan)
 df['budget'].fillna(df['budget'].median(), inplace=True)
 
-# Fill missing/zero revenues with median
 df['revenue'] = df['revenue'].replace(0, np.nan)
 df['revenue'].fillna(df['revenue'].median(), inplace=True)
 
-# Extract genres
+df['profit'] = df['revenue'] - df['budget']
+df['roi'] = df['revenue'] / df['budget']
+
 def extract_genres(x):
     try:
         genres = [i['name'] for i in ast.literal_eval(x)]
@@ -47,7 +45,6 @@ def extract_genres(x):
 
 df['genres'] = df['genres'].apply(extract_genres)
 
-# Extract director
 def get_director(crew_data):
     try:
         crew_list = ast.literal_eval(crew_data)
@@ -98,6 +95,37 @@ plt.xlabel("Popularity")
 plt.ylabel("Rating")
 plt.show()
 
+skewness_revenue = df['revenue'].skew()
+skewness_budget = df['budget'].skew()
+
+print(f"Skewness of 'revenue': {skewness_revenue}")
+print(f"Skewness of 'budget': {skewness_budget}")
+
+plt.figure(figsize=(12, 6))
+
+plt.subplot(1, 2, 1)
+sns.histplot(df['budget'], bins=50, kde=True)
+plt.title("Distribution of Movie Budgets")
+plt.xlabel("Budget")
+plt.ylabel("Count")
+
+plt.subplot(1, 2, 2)
+sns.histplot(df['revenue'], bins=50, kde=True, color='orange')
+plt.title("Distribution of Movie Revenues")
+plt.xlabel("Revenue")
+plt.ylabel("Count")
+
+plt.tight_layout()
+plt.savefig('Budget Revenue Histograms.png')
+plt.show()
+
+numerical_features = ['budget', 'popularity', 'runtime', 'vote_count', 'revenue', 'release_year', 'vote_average']
+
+sns.pairplot(df[numerical_features])
+
+plt.savefig('Movie Pair Plot.png')
+plt.show()
+
 print("\nCleaned dataset shape:", df.shape)
 
-df.to_csv('./Data/Cleaned/movies_cleaned.csv', index=False)
+# df.to_csv('./Data/Cleaned/movies_cleaned.csv', index=False)
