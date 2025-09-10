@@ -1,7 +1,8 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import RobustScaler, OneHotEncoder
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import ExtraTreesRegressor
+# from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import numpy as np
 import ast
@@ -37,12 +38,12 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 
 param_grid = {
     'n_estimators': [50, 100],
-    'max_depth': [5, 7],     # Significantly lower max_depth
-    'min_samples_split': [20, 30],  # Increased min_samples_split
-    'min_samples_leaf': [15, 20]   # Increased min_samples_leaf
+    'max_depth': [5, 7],     
+    'min_samples_split': [20, 30],
+    'min_samples_leaf': [15, 20] 
 }
 
-rf = RandomForestRegressor(random_state=42, n_jobs=-1)
+rf = ExtraTreesRegressor(random_state=42, n_jobs=-1)
 grid_search = GridSearchCV(estimator=rf, param_grid=param_grid, 
                            scoring='r2', cv=3, n_jobs=-1, verbose=1)
 grid_search.fit(X_train, y_train)

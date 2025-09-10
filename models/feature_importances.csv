@@ -1,0 +1,244 @@
+feature,importance
+vote_count,2300
+revenue_per_vote,2009
+release_year,1974
+runtime,1627
+popularity_per_vote,1480
+popularity,1241
+budget,1118
+overview_length,1062
+overview_sentiment,950
+roi,719
+log_vote_count,628
+tagline_length,558
+profit,530
+genre_Drama,476
+genre_count,428
+release_decade,369
+genre_Documentary,332
+log_budget,309
+genre_Action,302
+revenue,299
+genre_Horror,288
+genre_Animation,286
+genre_Thriller,252
+genre_Science Fiction,225
+profit_margin,217
+tagline_sentiment,205
+genre_Comedy,193
+genre_Fantasy,152
+log_profit,123
+log_revenue,99
+genre_Crime,94
+genre_Music,81
+genre_History,77
+genre_Adventure,71
+genre_Western,70
+log_roi,66
+genre_Romance,54
+writer_Unknown,38
+genre_Family,36
+genre_War,28
+genre_Mystery,3
+cast_count,1
+genre_Foreign,0
+director_Unknown,0
+director_Steven Spielberg,0
+director_Woody Allen,0
+director_Clint Eastwood,0
+director_Martin Scorsese,0
+director_Robert Rodriguez,0
+director_Spike Lee,0
+genre_TV Movie,0
+director_Ridley Scott,0
+director_Renny Harlin,0
+director_Tim Burton,0
+director_Steven Soderbergh,0
+director_Ron Howard,0
+director_Joel Schumacher,0
+director_Robert Zemeckis,0
+director_Oliver Stone,0
+director_Brian De Palma,0
+director_Michael Bay,0
+director_Francis Ford Coppola,0
+director_Kevin Smith,0
+director_Tony Scott,0
+director_Sam Raimi,0
+director_Rob Reiner,0
+director_Barry Levinson,0
+director_Richard Donner,0
+director_Shawn Levy,0
+director_Bobby Farrelly,0
+director_Richard Linklater,0
+director_Joel Coen,0
+director_Paul W.S. Anderson,0
+director_Wes Craven,0
+director_John Carpenter,0
+director_Stephen Frears,0
+director_David Fincher,0
+director_John McTiernan,0
+director_Tyler Perry,0
+director_Dennis Dugan,0
+director_Brett Ratner,0
+director_Lasse Hallström,0
+director_Chris Columbus,0
+director_Rob Cohen,0
+director_M. Night Shyamalan,0
+director_Phillip Noyce,0
+director_Peter Jackson,0
+director_Bryan Singer,0
+director_Simon West,0
+director_Jay Roach,0
+director_Quentin Tarantino,0
+director_Roland Emmerich,0
+director_Adam Shankman,0
+director_Neil Jordan,0
+writer_Woody Allen,0
+writer_Luc Besson,0
+writer_Ian Fleming,0
+writer_David Koepp,0
+writer_Joel Coen,0
+writer_Brian Helgeland,0
+writer_David Mamet,0
+writer_George Lucas,0
+writer_Stephen King,0
+writer_Robert Rodriguez,0
+writer_Akiva Goldsman,0
+writer_Ted Elliott,0
+writer_Oliver Stone,0
+writer_Kevin Smith,0
+writer_William Goldman,0
+writer_John Logan,0
+writer_Sylvester Stallone,0
+writer_Francis Ford Coppola,0
+writer_Stan Lee,0
+writer_Quentin Tarantino,0
+writer_Tyler Perry,0
+writer_M. Night Shyamalan,0
+writer_Bobby Farrelly,0
+writer_Richard LaGravenese,0
+writer_Adam Sandler,0
+writer_Ehren Kruger,0
+writer_Marlon Wayans,0
+writer_Spike Lee,0
+writer_Steve Oedekerk,0
+writer_Peter Jackson,0
+writer_Richard Linklater,0
+writer_Wes Craven,0
+writer_Steven Zaillian,0
+writer_David Twohy,0
+writer_Christopher Nolan,0
+writer_Aline Brosh McKenna,0
+writer_Harold Ramis,0
+writer_Tony Gilroy,0
+writer_Eric Roth,0
+writer_Frank Miller,0
+writer_David S. Goyer,0
+writer_Andrew Stanton,0
+writer_Ed Solomon,0
+writer_David Ayer,0
+writer_Steven E. de Souza,0
+writer_Peter Morgan,0
+writer_Paul Haggis,0
+writer_Richard Curtis,0
+writer_John Hughes,0
+cast_Robert De Niro,0
+cast_Bruce Willis,0
+cast_Matt Damon,0
+cast_Samuel L. Jackson,0
+cast_Nicolas Cage,0
+cast_Johnny Depp,0
+cast_Brad Pitt,0
+cast_Tom Hanks,0
+cast_Denzel Washington,0
+cast_Morgan Freeman,0
+cast_Ben Stiller,0
+cast_Eddie Murphy,0
+cast_Tom Cruise,0
+cast_Mark Wahlberg,0
+cast_Harrison Ford,0
+cast_Julia Roberts,0
+cast_John Travolta,0
+cast_George Clooney,0
+cast_Cameron Diaz,0
+cast_Ewan McGregor,0
+cast_Owen Wilson,0
+cast_Will Ferrell,0
+cast_Arnold Schwarzenegger,0
+cast_Nicole Kidman,0
+cast_Robin Williams,0
+cast_Sylvester Stallone,0
+cast_Adam Sandler,0
+cast_Meryl Streep,0
+cast_Sandra Bullock,0
+cast_Matthew McConaughey,0
+cast_Kevin Costner,0
+cast_Julianne Moore,0
+cast_Liam Neeson,0
+cast_Pierce Brosnan,0
+cast_Sean Connery,0
+cast_Jim Carrey,0
+cast_Gerard Butler,0
+cast_Anthony Hopkins,0
+cast_Drew Barrymore,0
+cast_Russell Crowe,0
+cast_Alec Baldwin,0
+cast_John Cusack,0
+cast_Tommy Lee Jones,0
+cast_Susan Sarandon,0
+cast_Cate Blanchett,0
+cast_Jeff Bridges,0
+cast_Christian Bale,0
+cast_Mel Gibson,0
+cast_Kate Winslet,0
+cast_Jason Statham,0
+cast_Charlize Theron,0
+cast_Angelina Jolie,0
+cast_Keanu Reeves,0
+cast_Leonardo DiCaprio,0
+cast_Will Smith,0
+cast_Anne Hathaway,0
+cast_Hugh Jackman,0
+cast_Jake Gyllenhaal,0
+cast_Ethan Hawke,0
+cast_Robert Downey Jr.,0
+cast_Ben Affleck,0
+cast_Gary Oldman,0
+cast_Dwayne Johnson,0
+cast_Gene Hackman,0
+cast_Ben Kingsley,0
+cast_Aaron Eckhart,0
+cast_Kirsten Dunst,0
+cast_Paul Rudd,0
+cast_Antonio Banderas,0
+cast_Forest Whitaker,0
+cast_Jude Law,0
+cast_Al Pacino,0
+cast_Ralph Fiennes,0
+cast_Val Kilmer,0
+cast_Philip Seymour Hoffman,0
+cast_Natalie Portman,0
+cast_Steve Carell,0
+cast_Reese Witherspoon,0
+cast_Christopher Plummer,0
+cast_Scarlett Johansson,0
+cast_Ice Cube,0
+cast_Jennifer Aniston,0
+cast_John Goodman,0
+cast_Sigourney Weaver,0
+cast_Dennis Quaid,0
+cast_Dustin Hoffman,0
+cast_Colin Farrell,0
+cast_Jennifer Lopez,0
+cast_Mark Ruffalo,0
+cast_Richard Gere,0
+cast_Joaquin Phoenix,0
+cast_Vince Vaughn,0
+cast_Rachel McAdams,0
+cast_Robert Duvall,0
+cast_Brendan Fraser,0
+cast_Catherine Keener,0
+cast_Kurt Russell,0
+cast_Naomi Watts,0
+cast_Jack Black,0
+cast_Diane Keaton,0
