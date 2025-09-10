@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import RobustScaler
+from sklearn.preprocessing import OneHotEncoder
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import numpy as np
@@ -22,10 +23,10 @@ X_scaled = pd.DataFrame(scaler.fit_transform(X), columns=features)
 X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
 param_grid = {
-    'n_estimators': [100, 200],
-    'max_depth': [None, 10, 20],
-    'min_samples_split': [2, 5, 10],
-    'min_samples_leaf': [1, 2, 4]
+    'n_estimators': [50, 100], 
+    'max_depth': [5],     
+    'min_samples_split': [10, 20],  
+    'min_samples_leaf': [10, 20]   
 }
 
 rf = RandomForestRegressor(random_state=42, n_jobs=-1)
