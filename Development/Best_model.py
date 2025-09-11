@@ -1,6 +1,7 @@
 import os
 import joblib
 import warnings
+import matplotlib.pyplot as plt
 warnings.filterwarnings("ignore")
 
 import pandas as pd
@@ -25,14 +26,14 @@ try:
 except Exception as e:
     raise ImportError("LightGBM is required. Install with: pip install lightgbm") from e
 
-CSV_PATH = "./Data/Cleaned/movies_enriched.csv"  
+CSV_PATH = "../Data/Cleaned/movies_enriched.csv"  
 RANDOM_STATE = 42
 TEST_SIZE = 0.2
 VALID_SIZE = 0.2   
 N_TRIALS = 40    
 RANDOMIZED_ITERS = 50  
-MODEL_OUTPUT = "./models/lgbm_movies_enriched.pkl"
-IMPORTANCE_OUTPUT = "./models/feature_importances.csv"
+MODEL_OUTPUT = "../models/lgbm_movies_enriched.pkl"
+IMPORTANCE_OUTPUT = "../models/feature_importances.csv"
 os.makedirs(os.path.dirname(MODEL_OUTPUT), exist_ok=True)
 
 df = pd.read_csv(CSV_PATH)
@@ -58,7 +59,7 @@ X[binary_cols] = X[binary_cols].fillna(0)
 scaler = RobustScaler()
 X[numeric_cols] = scaler.fit_transform(X[numeric_cols])
 
-joblib.dump(scaler, os.path.join(os.path.dirname(MODEL_OUTPUT), "robustscaler.pkl"))
+# joblib.dump(scaler, os.path.join(os.path.dirname(MODEL_OUTPUT), "robustscaler.pkl"))
 
 X_train_full, X_test, y_train_full, y_test = train_test_split(
     X, y, test_size=TEST_SIZE, random_state=RANDOM_STATE
@@ -72,15 +73,17 @@ print("Train shape:", X_train.shape, "Val shape:", X_val.shape, "Test shape:", X
 
 def objective_optuna(trial):
     param = {
-        'n_estimators': trial.suggest_int('n_estimators', 200, 1500),
-        'num_leaves': trial.suggest_int('num_leaves', 20, 200),
-        'max_depth': trial.suggest_int('max_depth', 3, 16),
-        'learning_rate': trial.suggest_loguniform('learning_rate', 1e-3, 1e-1),
-        'subsample': trial.suggest_float('subsample', 0.6, 1.0),
-        'colsample_bytree': trial.suggest_float('colsample_bytree', 0.4, 1.0),
-        'reg_alpha': trial.suggest_loguniform('reg_alpha', 1e-3, 10.0),
-        'reg_lambda': trial.suggest_loguniform('reg_lambda', 1e-3, 10.0),
-        'min_child_samples': trial.suggest_int('min_child_samples', 5, 100),
+        'n_estimators': trial.suggest_int('n_estimators', 800, 2000),
+        'num_leaves': trial.suggest_int('num_leaves', 20, 60),
+        'max_depth': trial.suggest_int('max_depth', 3, 7),
+        'learning_rate': trial.suggest_loguniform('learning_rate', 1e-2, 5e-2),
+        'subsample': trial.suggest_float('subsample', 0.5, 0.8),
+        'colsample_bytree': trial.suggest_float('colsample_bytree', 0.5, 0.8),
+        'reg_alpha': trial.suggest_loguniform('reg_alpha', 1e-2, 10.0),
+        'reg_lambda': trial.suggest_loguniform('reg_lambda', 1e-2, 10.0),
+        'min_child_samples': trial.suggest_int('min_child_samples', 20, 200),
+        'reg_alpha': trial.suggest_loguniform('reg_alpha', 1e-1, 50.0), 
+        'reg_lambda': trial.suggest_loguniform('reg_lambda', 1e-1, 50.0),
     }
 
     model = LGBMRegressor(random_state=RANDOM_STATE, n_jobs=-1, **param)
@@ -88,7 +91,7 @@ def objective_optuna(trial):
     model.fit(
         X_train, y_train,
         eval_set=[(X_val, y_val)],
-        callbacks=[early_stopping(50), log_evaluation(50)],
+        callbacks=[early_stopping(25), log_evaluation(50)],
     )
 
     preds = model.predict(X_val)
@@ -147,11 +150,49 @@ final_model.fit(
     X_train_sub, y_train_sub,
     eval_set=[(X_val_sub, y_val_sub)],
     eval_metric='rmse',
-    callbacks=[early_stopping(50), log_evaluation(50)]
+    callbacks=[early_stopping(25, verbose=False), log_evaluation(50)]
 )
+
+optimal_rounds = final_model.best_iteration_
+if optimal_rounds is None:
+    optimal_rounds = final_model.n_estimators
+print(f"Early stopping found best iteration at: {optimal_rounds} boosting rounds")
 
 y_train_pred = final_model.predict(X_train_full)
 y_test_pred = final_model.predict(X_test)
+
+def plot_lgbm_learning_curve(X_train, y_train, X_val, y_val, params, max_rounds=500, step=10):
+    train_rmse = []
+    val_rmse = []
+
+    params = params.copy()
+    params.pop('n_estimators', None)
+
+    for n in range(step, max_rounds + 1, step):
+        model = LGBMRegressor(n_estimators=n, random_state=42, n_jobs=-1, **params)
+        model.fit(X_train, y_train)
+        y_train_pred = model.predict(X_train)
+        y_val_pred = model.predict(X_val)
+
+        train_rmse.append(np.sqrt(mean_squared_error(y_train, y_train_pred)))
+        val_rmse.append(np.sqrt(mean_squared_error(y_val, y_val_pred)))
+
+    plt.figure(figsize=(10,5))
+    plt.plot(range(step, max_rounds + 1, step), train_rmse, label='Train RMSE')
+    plt.plot(range(step, max_rounds + 1, step), val_rmse, label='Validation RMSE')
+    plt.xlabel('n_estimators (Boosting Rounds)')
+    plt.ylabel('RMSE')
+    plt.title('LightGBM Learning Curve')
+    plt.legend()
+    plt.show()
+
+plot_lgbm_learning_curve(
+    X_train_sub, y_train_sub,
+    X_val_sub, y_val_sub,
+    params=best_params,
+    max_rounds=optimal_rounds,
+    step=20                               
+)
 
 print("\nTrain Performance:")
 print(f"MAE: {mean_absolute_error(y_train_full, y_train_pred):.4f}")
@@ -167,11 +208,11 @@ fi = pd.DataFrame({
     'feature': X_train_full.columns,
     'importance': final_model.feature_importances_
 }).sort_values('importance', ascending=False)
-fi.to_csv(IMPORTANCE_OUTPUT, index=False)
-print(f"Saved feature importances to {IMPORTANCE_OUTPUT}")
+# fi.to_csv(IMPORTANCE_OUTPUT, index=False)
+# print(f"Saved feature importances to {IMPORTANCE_OUTPUT}")
 
-joblib.dump(final_model, MODEL_OUTPUT)
-print(f"Saved model to {MODEL_OUTPUT}")
+# joblib.dump(final_model, MODEL_OUTPUT)
+# print(f"Saved model to {MODEL_OUTPUT}")
 
 print("\nTop 20 features by importance:")
 print(fi.head(20).to_string(index=False))

@@ -1,12 +1,12 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.preprocessing import RobustScaler
-from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.preprocessing import RobustScaler, OneHotEncoder
+from sklearn.linear_model import Lasso
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import numpy as np
 import ast
 
-df = pd.read_csv("./Data/Cleaned/movies_cleaned.csv")
+df = pd.read_csv("../Data/Cleaned/movies_cleaned.csv")
 
 df['genres'] = df['genres'].apply(ast.literal_eval)
 
@@ -15,7 +15,7 @@ top_genres = pd.Series(all_genres).value_counts().head(20).index.tolist()
 
 top_directors = df['director'].value_counts().head(50).index.tolist()
 
-numerical_features = ['budget', 'popularity', 'revenue', 'runtime', 'release_year', 'profit', 'roi']
+numerical_features = ['budget', 'popularity', 'revenue', 'runtime', 'release_year']
 categorical_features = ['genres', 'director']
 
 for genre in top_genres:
@@ -36,26 +36,21 @@ X[numerical_features] = scaler.fit_transform(X[numerical_features])
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 param_grid = {
-    'n_estimators': [500, 800],
-    'max_depth': [3, 4, 5],
-    'learning_rate': [0.01, 0.02],
-    'subsample': [0.7, 0.8, 1.0],
-    'min_samples_split': [2, 5, 10],
-    'min_samples_leaf': [1, 3, 5]
+    'alpha': [0.0001, 0.001, 0.01]
 }
 
-gbr = GradientBoostingRegressor(random_state=42)
-grid_search = GridSearchCV(estimator=gbr, param_grid=param_grid,
-                           scoring='r2', cv=3, n_jobs=-1, verbose=1)
+lasso = Lasso(random_state=42)
+grid_search = GridSearchCV(estimator=lasso, param_grid=param_grid,
+                           scoring='r2', cv=3, verbose=1)
 grid_search.fit(X_train, y_train)
 
 print("Best Hyperparameters:", grid_search.best_params_)
 
-best_gbr = grid_search.best_estimator_
-best_gbr.fit(X_train, y_train)
+best_lasso = grid_search.best_estimator_
+best_lasso.fit(X_train, y_train)
 
-y_train_pred = best_gbr.predict(X_train)
-y_test_pred = best_gbr.predict(X_test)
+y_train_pred = best_lasso.predict(X_train)
+y_test_pred = best_lasso.predict(X_test)
 
 train_mae = mean_absolute_error(y_train, y_train_pred)
 train_rmse = np.sqrt(mean_squared_error(y_train, y_train_pred))

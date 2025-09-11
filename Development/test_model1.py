@@ -1,12 +1,13 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import RobustScaler, OneHotEncoder
-from sklearn.linear_model import Lasso
+from sklearn.ensemble import ExtraTreesRegressor
+# from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import numpy as np
 import ast
 
-df = pd.read_csv("./Data/Cleaned/movies_cleaned.csv")
+df = pd.read_csv("../Data/Cleaned/movies_cleaned.csv")
 
 df['genres'] = df['genres'].apply(ast.literal_eval)
 
@@ -36,21 +37,24 @@ X[numerical_features] = scaler.fit_transform(X[numerical_features])
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 param_grid = {
-    'alpha': [0.0001, 0.001, 0.01]
+    'n_estimators': [50, 100],
+    'max_depth': [5, 7],     
+    'min_samples_split': [20, 30],
+    'min_samples_leaf': [15, 20] 
 }
 
-lasso = Lasso(random_state=42)
-grid_search = GridSearchCV(estimator=lasso, param_grid=param_grid,
-                           scoring='r2', cv=3, verbose=1)
+rf = ExtraTreesRegressor(random_state=42, n_jobs=-1)
+grid_search = GridSearchCV(estimator=rf, param_grid=param_grid, 
+                           scoring='r2', cv=3, n_jobs=-1, verbose=1)
 grid_search.fit(X_train, y_train)
 
 print("Best Hyperparameters:", grid_search.best_params_)
 
-best_lasso = grid_search.best_estimator_
-best_lasso.fit(X_train, y_train)
+best_rf = grid_search.best_estimator_
+best_rf.fit(X_train, y_train)
 
-y_train_pred = best_lasso.predict(X_train)
-y_test_pred = best_lasso.predict(X_test)
+y_train_pred = best_rf.predict(X_train)
+y_test_pred = best_rf.predict(X_test)
 
 train_mae = mean_absolute_error(y_train, y_train_pred)
 train_rmse = np.sqrt(mean_squared_error(y_train, y_train_pred))

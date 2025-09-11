@@ -3,8 +3,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-CSV_PATH = "./Data/Cleaned/movies_enriched.csv"
-OUT_DIR = "./Data/Visualizations"
+CSV_PATH = "../Data/Cleaned/movies_enriched.csv"
+OUT_DIR = "../Data/Visualizations"
 os.makedirs(OUT_DIR, exist_ok=True)
 
 df = pd.read_csv(CSV_PATH)

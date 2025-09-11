@@ -3,8 +3,8 @@ import numpy as np
 import ast
 from textblob import TextBlob
 
-movies = pd.read_csv('./Data/Uncleaned/tmdb_5000_movies.csv')
-credits = pd.read_csv('./Data/Uncleaned/tmdb_5000_credits.csv')
+movies = pd.read_csv('../Data/Uncleaned/tmdb_5000_movies.csv')
+credits = pd.read_csv('../Data/Uncleaned/tmdb_5000_credits.csv')
 
 print("Original Movies shape:", movies.shape)
 print("Original Credits shape:", credits.shape)
