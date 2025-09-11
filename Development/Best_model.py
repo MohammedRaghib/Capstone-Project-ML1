@@ -26,14 +26,14 @@ try:
 except Exception as e:
     raise ImportError("LightGBM is required. Install with: pip install lightgbm") from e
 
-CSV_PATH = "../Data/Cleaned/movies_enriched.csv"  
+CSV_PATH = "C:/Users/LENOVO/Documents/Projects/Capstone-Project-ML1/Data/Cleaned/movies_enriched.csv"  
 RANDOM_STATE = 42
 TEST_SIZE = 0.2
 VALID_SIZE = 0.2   
 N_TRIALS = 40    
 RANDOMIZED_ITERS = 50  
-MODEL_OUTPUT = "../models/lgbm_movies_enriched.pkl"
-IMPORTANCE_OUTPUT = "../models/feature_importances.csv"
+MODEL_OUTPUT = "C:/Users/LENOVO/Documents/Projects/Capstone-Project-ML1/models/lgbm_movies_enriched.pkl"
+IMPORTANCE_OUTPUT = "C:/Users/LENOVO/Documents/Projects/Capstone-Project-ML1/models/feature_importances.csv"
 os.makedirs(os.path.dirname(MODEL_OUTPUT), exist_ok=True)
 
 df = pd.read_csv(CSV_PATH)
@@ -208,6 +208,9 @@ fi = pd.DataFrame({
     'feature': X_train_full.columns,
     'importance': final_model.feature_importances_
 }).sort_values('importance', ascending=False)
+
+# joblib.dump(X_train_full.columns.tolist(), "C:/Users/LENOVO/Documents/Projects/Capstone-Project-ML1/models/feature_columns.pkl")
+
 # fi.to_csv(IMPORTANCE_OUTPUT, index=False)
 # print(f"Saved feature importances to {IMPORTANCE_OUTPUT}")
 
