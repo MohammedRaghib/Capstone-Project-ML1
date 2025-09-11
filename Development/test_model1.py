@@ -1,40 +1,40 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.preprocessing import RobustScaler, OneHotEncoder
-from sklearn.ensemble import ExtraTreesRegressor
-# from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import numpy as np
-import ast
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.preprocessing import RobustScaler
+from sklearn.ensemble import ExtraTreesRegressor
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+import joblib
+import os
 
-df = pd.read_csv("../Data/Cleaned/movies_cleaned.csv")
+script_dir = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(script_dir, "../Data/Cleaned/movies_enriched.csv")
+df = pd.read_csv(file_path)
 
-df['genres'] = df['genres'].apply(ast.literal_eval)
+if 'vote_average' not in df.columns:
+    raise ValueError("Expected column 'vote_average' in CSV")
 
-all_genres = [genre for sublist in df['genres'] for genre in sublist]
-top_genres = pd.Series(all_genres).value_counts().head(20).index.tolist()
+y = df['vote_average'].copy()
+X = df.drop(columns=['vote_average'])
 
-top_directors = df['director'].value_counts().head(50).index.tolist()
+binary_prefixes = ('genre_', 'director_', 'writer_', 'cast_')
+binary_cols = [c for c in X.columns if c.startswith(binary_prefixes)]
+numeric_cols = [c for c in X.columns if c not in binary_cols]
 
-numerical_features = ['budget', 'popularity', 'revenue', 'runtime', 'release_year']
-categorical_features = ['genres', 'director']
+print(f"Numeric features ({len(numeric_cols)}): {numeric_cols[:10]}{'...' if len(numeric_cols)>10 else ''}")
+print(f"Binary features (count={len(binary_cols)}): sample {binary_cols[:8]}")
 
-for genre in top_genres:
-    df[f'genre_{genre}'] = df['genres'].apply(lambda x: 1 if genre in x else 0)
-
-for director in top_directors:
-    df[f'director_{director}'] = df['director'].apply(lambda x: 1 if director == x else 0)
-
-X = df[numerical_features + [f'genre_{g}' for g in top_genres] + [f'director_{d}' for d in top_directors]]
-y = df['vote_average']
-
-X = X.fillna(X.median())
-y = y.fillna(y.median())
+X[numeric_cols] = X[numeric_cols].fillna(X[numeric_cols].median())
+X[binary_cols] = X[binary_cols].fillna(0)
 
 scaler = RobustScaler()
-X[numerical_features] = scaler.fit_transform(X[numerical_features])
+X[numeric_cols] = scaler.fit_transform(X[numeric_cols])
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+joblib.dump(scaler, "C:/Users/LENOVO/Documents/Projects/Capstone-Project-ML1/models/robustscaler_extratrees.pkl")
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
 
 param_grid = {
     'n_estimators': [50, 100],
@@ -44,8 +44,14 @@ param_grid = {
 }
 
 rf = ExtraTreesRegressor(random_state=42, n_jobs=-1)
-grid_search = GridSearchCV(estimator=rf, param_grid=param_grid, 
-                           scoring='r2', cv=3, n_jobs=-1, verbose=1)
+grid_search = GridSearchCV(
+    estimator=rf, 
+    param_grid=param_grid, 
+    scoring='r2', 
+    cv=3, 
+    n_jobs=-1, 
+    verbose=1
+)
 grid_search.fit(X_train, y_train)
 
 print("Best Hyperparameters:", grid_search.best_params_)
@@ -73,3 +79,6 @@ print("\nTest Performance:")
 print(f"MAE: {test_mae:.2f}")
 print(f"RMSE: {test_rmse:.2f}")
 print(f"R²: {test_r2:.2f}")
+
+joblib.dump(best_rf, "C:/Users/LENOVO/Documents/Projects/Capstone-Project-ML1/models/extratrees_movies_enriched.pkl")
+print("Saved ExtraTrees model to C:/Users/LENOVO/Documents/Projects/Capstone-Project-ML1/models/extratrees_movies_enriched.pkl")
