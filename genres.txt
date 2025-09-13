@@ -1,0 +1,21 @@
+Drama
+count
+Documentary
+Action
+Horror
+Animation
+Thriller
+Science Fiction
+Comedy
+Fantasy
+Crime
+Music
+History
+Adventure
+Western
+Romance
+Family
+War
+Mystery
+Foreign
+TV Movie

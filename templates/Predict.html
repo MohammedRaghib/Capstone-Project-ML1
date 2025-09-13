@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+       
+    <meta charset="UTF-8" />
+       
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+       
+    <title>Movie Rating Predictor</title>
+       
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap");
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f3f4f6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 1rem;
+      }
+
+      .container {
+        background-color: #fff;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        width: 100%;
+        max-width: 48rem;
+        /* Equivalent to max-w-2xl */
+      }
+
+      .title {
+        font-size: 1.875rem;
+        /* Equivalent to text-3xl */
+        font-weight: 700;
+        /* Equivalent to font-bold */
+        text-align: center;
+        color: #1f2937;
+        /* Equivalent to text-gray-800 */
+        margin-bottom: 1.5rem;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #6b7280;
+        /* Equivalent to text-gray-500 */
+        margin-bottom: 2rem;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      @media (min-width: 768px) {
+        .form-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .full-width-input {
+          grid-column: span 2 / span 2;
+        }
+      }
+
+      label {
+        display: block;
+        font-size: 0.875rem;
+        /* Equivalent to text-sm */
+        font-weight: 500;
+        /* Equivalent to font-medium */
+        color: #374151;
+        /* Equivalent to text-gray-700 */
+        margin-bottom: 0.25rem;
+      }
+
+      input,
+      select {
+        display: block;
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #d1d5db;
+        /* Equivalent to border-gray-300 */
+        border-radius: 0.375rem;
+        /* Equivalent to rounded-md */
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        /* Equivalent to shadow-sm */
+        font-size: 0.875rem;
+        /* Equivalent to sm:text-sm */
+        color: #1f2937;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      }
+
+      input:focus,
+      select:focus {
+        outline: none;
+        border-color: #4f46e5;
+        /* Equivalent to focus:border-indigo-500 */
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5);
+        /* Equivalent to focus:ring-indigo-500 */
+      }
+
+      select {
+        background-color: #fff;
+      }
+
+      .button-container {
+        text-align: center;
+      }
+
+      button {
+        width: 100%;
+        padding: 0.75rem 1.5rem;
+        border: 1px solid transparent;
+        font-size: 1rem;
+        font-weight: 500;
+        border-radius: 0.375rem;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        color: #fff;
+        background-color: #2563eb;
+        /* Equivalent to bg-blue-600 */
+        cursor: pointer;
+        transition: background-color 0.15s ease-in-out;
+      }
+
+      button:hover {
+        background-color: #1d4ed8;
+        /* Equivalent to hover:bg-blue-700 */
+      }
+
+      button:focus {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px #fff, 0 0 0 4px #3b82f6;
+        /* Equivalent to focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 */
+      }
+
+      @media (min-width: 768px) {
+        button {
+          width: auto;
+        }
+      }
+
+      .result-container {
+        margin-top: 2rem;
+        text-align: center;
+        display: none;
+      }
+
+      .result-label {
+        font-size: 1.125rem;
+        /* Equivalent to text-lg */
+        font-weight: 500;
+        color: #374151;
+      }
+
+      .result-value {
+        font-size: 2.25rem;
+        /* Equivalent to text-4xl */
+        font-weight: 800;
+        /* Equivalent to font-extrabold */
+        color: #2563eb;
+        /* Equivalent to text-blue-600 */
+        margin-top: 0.5rem;
+      }
+
+      .error-container {
+        margin-top: 2rem;
+        text-align: center;
+        color: #ef4444;
+        /* Equivalent to text-red-500 */
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+       
+    <div class="container">
+             
+      <h1 class="title">Movie Rating Predictor</h1>
+             
+      <p class="subtitle">
+        Select movie features and get a predicted vote average.
+      </p>
+
+             
+      <form id="prediction-form">          
+        <div class="form-grid">           
+          <div>
+                                <label for="budget">Budget</label>              
+                 
+            <input type="number" id="budget" name="budget" value="165000000" />
+                           
+          </div>
+                         
+          <div>
+                                <label for="popularity">Popularity</label>      
+                         
+            <input
+              type="number"
+              step="0.1"
+              id="popularity"
+              name="popularity"
+              value="150.3"
+            />
+                           
+          </div>
+                         
+          <div>
+                                <label for="runtime">Runtime (minutes)</label>  
+                             
+            <input type="number" id="runtime" name="runtime" value="148.0" />  
+                         
+          </div>
+                         
+          <div>
+                                <label for="vote_count">Vote Count</label>      
+                         
+            <input
+              type="number"
+              id="vote_count"
+              name="vote_count"
+              value="20000"
+            />
+                           
+          </div>
+                         
+          <div>
+                                <label for="revenue">Revenue</label>            
+                   
+            <input
+              type="number"
+              id="revenue"
+              name="revenue"
+              value="830000000"
+            />
+                           
+          </div>
+                         
+          <div>
+                                <label for="release_year">Release Year</label>  
+                             
+            <input
+              type="number"
+              id="release_year"
+              name="release_year"
+              value="2010"
+            />
+                           
+          </div>
+                                                         
+          <div class="full-width-input">
+                                <label for="genre">Genre</label>                
+               
+            <select id="genre" name="genre">
+                                     
+              <option value="">Select a genre...</option>
+                                      {% for g in genres %}                    
+                 
+              <option value="{{ g }}">{{ g }}</option>
+                                      {% endfor %}                    
+            </select>
+                           
+          </div>
+
+                         
+          <div class="full-width-input">
+                                <label for="director">Director</label>          
+                     
+            <select id="director" name="director">
+                                     
+              <option value="">Select a director...</option>
+                                      {% for d in directors %}                  
+                   
+              <option value="{{ d }}">{{ d }}</option>
+                                      {% endfor %}                    
+            </select>
+                           
+          </div>
+
+                         
+          <div class="full-width-input">
+                                <label for="cast">Cast</label>                  
+             
+            <select id="cast" name="cast">
+                                     
+              <option value="">Select a cast member...</option>
+                                      {% for c in cast %}                      
+               
+              <option value="{{ c }}">{{ c }}</option>
+                                      {% endfor %}                    
+            </select>
+                           
+          </div>
+
+                         
+          <div class="full-width-input">
+                                <label for="writer">Writer</label>              
+                 
+            <select id="writer" name="writer">
+                                     
+              <option value="">Select a writer...</option>
+                                      {% for w in writers %}                    
+                 
+              <option value="{{ w }}">{{ w }}</option>
+                                      {% endfor %}                    
+            </select>
+                           
+          </div>
+                     
+        </div>
+
+                   
+        <div class="button-container">
+                         
+          <button type="submit">
+                                Predict Rating                
+          </button>
+                     
+        </div>
+               
+      </form>
+
+             
+      <div id="result-container" class="result-container">
+                   
+        <p class="result-label">Predicted Vote Average:</p>
+                   
+        <p id="prediction-result" class="result-value"></p>
+               
+      </div>
+
+             
+      <div id="error-container" class="error-container">
+                   
+        <p id="error-message"></p>
+               
+      </div>
+         
+    </div>
+
+       
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById("prediction-form");
+        const resultContainer = document.getElementById("result-container");
+        const predictionResult = document.getElementById("prediction-result");
+        const errorContainer = document.getElementById("error-container");
+        const errorMessage = document.getElementById("error-message");
+
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          resultContainer.style.display = "none";
+          errorContainer.style.display = "none";
+
+          const formData = new FormData(form);
+          const payload = {};
+          for (const [key, value] of formData.entries()) {
+            payload[key] = value;
+          }
+
+          try {
+            const response = await fetch("/predict", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.error || "API request failed.");
+            }
+
+            const data = await response.json();
+            predictionResult.textContent = data.predicted_vote_average;
+            resultContainer.style.display = "block";
+          } catch (error) {
+            console.error("Prediction failed:", error);
+            errorContainer.style.display = "block";
+            errorMessage.textContent =
+              "Prediction failed. Check the server logs for more details.";
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
