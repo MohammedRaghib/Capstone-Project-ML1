@@ -5,7 +5,6 @@ import os
 
 app = Flask(__name__)
 
-# Load the model and feature columns
 try:
     model = joblib.load("models/lgbm_movies_enriched.pkl")
     all_columns = joblib.load("models/feature_columns.pkl")
@@ -41,7 +40,6 @@ def predict():
 
     input_dict = {col: 0 for col in all_columns}
 
-    # Add numerical features and convert them to float
     try:
         input_dict["budget"] = float(data.get("budget", 0))
         input_dict["popularity"] = float(data.get("popularity", 0))
@@ -52,7 +50,6 @@ def predict():
     except (ValueError, TypeError):
         return jsonify({"error": "Invalid input for numerical fields. Please ensure they are numbers."}), 400
 
-    # Add categorical features (one-hot encoded)
     selected_genre = f"genre_{data.get('genre')}"
     if selected_genre in input_dict:
         input_dict[selected_genre] = 1
