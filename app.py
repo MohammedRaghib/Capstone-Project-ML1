@@ -66,7 +66,6 @@ def predict():
     if selected_writer in input_dict:
         input_dict[selected_writer] = 1
 
-    # Create DataFrame and predict
     X = pd.DataFrame([input_dict], columns=all_columns)
     prediction = model.predict(X)[0]
 

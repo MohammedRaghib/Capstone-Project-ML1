@@ -1,5 +1,4 @@
 Drama
-count
 Documentary
 Action
 Horror
