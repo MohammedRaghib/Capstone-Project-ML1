@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request, render_template
 import joblib
 import pandas as pd
 import os
+import numpy as np
 
 app = Flask(__name__)
 
@@ -41,30 +42,39 @@ def predict():
     input_dict = {col: 0 for col in all_columns}
 
     try:
-        input_dict["budget"] = float(data.get("budget", 0))
-        input_dict["popularity"] = float(data.get("popularity", 0))
-        input_dict["runtime"] = float(data.get("runtime", 0))
-        input_dict["vote_count"] = float(data.get("vote_count", 0))
-        input_dict["revenue"] = float(data.get("revenue", 0))
-        input_dict["release_year"] = float(data.get("release_year", 0))
+        budget = float(data.get("budget", 0))
+        popularity = float(data.get("popularity", 0))
+        runtime = float(data.get("runtime", 0))
+        vote_count = float(data.get("vote_count", 0))
+        revenue = float(data.get("revenue", 0))
+        release_year = float(data.get("release_year", 0))
     except (ValueError, TypeError):
-        return jsonify({"error": "Invalid input for numerical fields. Please ensure they are numbers."}), 400
+        return jsonify({"error": "Invalid input for numerical fields"}), 400
+
+    input_dict["budget"] = budget
+    input_dict["popularity"] = popularity
+    input_dict["runtime"] = runtime
+    input_dict["vote_count"] = vote_count
+    input_dict["revenue"] = revenue
+    input_dict["release_year"] = release_year
+
+    input_dict["profit"] = revenue - budget
+    input_dict["roi"] = (revenue / budget) if budget > 0 else 0
+    input_dict["profit_margin"] = (revenue - budget) / revenue if revenue > 0 else 0
+    input_dict["log_budget"] = np.log1p(budget)
+    input_dict["log_revenue"] = np.log1p(revenue)
+    input_dict["log_vote_count"] = np.log1p(vote_count)
+    input_dict["log_profit"] = np.log1p(revenue - budget) if revenue > budget else 0
+    input_dict["log_roi"] = np.log1p(input_dict["roi"]) if input_dict["roi"] > 0 else 0
+    input_dict["revenue_per_vote"] = revenue / vote_count if vote_count > 0 else 0
+    input_dict["popularity_per_vote"] = popularity / vote_count if vote_count > 0 else 0
+
+    if budget < 0 or revenue < 0 or runtime < 0:
+        return jsonify({"error": "Budget, revenue, and runtime must be non-negative"}), 400
 
     selected_genre = f"genre_{data.get('genre')}"
     if selected_genre in input_dict:
         input_dict[selected_genre] = 1
-
-    selected_director = f"director_{data.get('director')}"
-    if selected_director in input_dict:
-        input_dict[selected_director] = 1
-
-    selected_cast = f"cast_{data.get('cast')}"
-    if selected_cast in input_dict:
-        input_dict[selected_cast] = 1
-        
-    selected_writer = f"writer_{data.get('writer')}"
-    if selected_writer in input_dict:
-        input_dict[selected_writer] = 1
 
     X = pd.DataFrame([input_dict], columns=all_columns)
     prediction = model.predict(X)[0]
