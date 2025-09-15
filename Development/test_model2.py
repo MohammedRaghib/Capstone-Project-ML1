@@ -5,8 +5,11 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import numpy as np
 import ast
+import os 
 
-df = pd.read_csv("../Data/Cleaned/movies_cleaned.csv")
+script_dir = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(script_dir, "../Data/Cleaned/movies_cleaned.csv")
+df = pd.read_csv(file_path)
 
 df['genres'] = df['genres'].apply(ast.literal_eval)
 

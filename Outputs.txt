@@ -1,0 +1,52 @@
+LightGBM:
+    Train Performance:
+    MAE: 0.4434
+    RMSE: 0.6182
+    R²: 0.7338
+
+    Test Performance:
+    MAE: 0.4980
+    RMSE: 0.7085
+    R²: 0.6291
+
+Enssemble:
+    Train MAE: 0.3030833355357825
+    Train RMSE: 0.4309818933493216
+    Train R²: 0.8706307240412414
+
+    Test MAE: 0.4989468339630049
+    Test RMSE: 0.7128523310219127
+    Test R²: 0.6245096141176105
+
+ExtraTrees:
+    Train Performance:
+    MAE: 0.53 
+    RMSE: 0.73
+    R²: 0.63  
+
+    Test Performance:
+    MAE: 0.56
+    RMSE: 0.78
+    R²: 0.56
+
+Gradient Boosting:
+    Train Performance:
+    MAE: 0.44        
+    RMSE: 0.61       
+    R²: 0.74
+
+    Test Performance:
+    MAE: 0.57        
+    RMSE: 0.87
+    R²: 0.45
+
+Lasso Regression:
+    Train Performance:
+    MAE: 0.67
+    RMSE: 1.02
+    R²: 0.28
+
+    Test Performance:
+    MAE: 0.66
+    RMSE: 0.99
+    R²: 0.27
